@@ -1,4 +1,8 @@
-module.exports = router;
+module.exports = {
+  router,
+  parseRouterResponse,
+};
+
 
 const _RequestNewLine = "\r\n";
 
@@ -11,6 +15,7 @@ function router(data) {
   // Session Expired return false
   // Login From Router Interface will terminate local Session. return false
   this.isSessionAlive = async function () {
+    
     postData = "[/cgi/clearBusy#0,0,0,0,0,0#0,0,0,0,0,0]0,0" + _RequestNewLine;
     urlParams = "8";
     try {
@@ -25,7 +30,8 @@ function router(data) {
     return false;
   };
 
-  this.getAllDevices = async function () {
+  this.getAllHosts = async function () {
+
     postData = "[LAN_HOST_ENTRY#0,0,0,0,0,0#0,0,0,0,0,0]0,0" + _RequestNewLine;
     urlParams = "5";
     responseText = await apiWebRequest(apiData, urlParams, postData);
@@ -44,6 +50,7 @@ function router(data) {
   };
 
   this.setHostname = async function (mac, hostname) {
+
     postData =
       "[LAN_HOST_ENTRY#0,0,0,0,0,0#0,0,0,0,0,0]0,2" +
       _RequestNewLine +
@@ -95,12 +102,31 @@ function router(data) {
     urlParams = "3&3";
     responseText = await apiWebRequest(apiData, urlParams, postData);
 
+    var rr = parseRouterResponse(responseText);
     if (responseText == "[error]0") {
       return { success: true };
     }
 
-    throw new Error("Failed to update hostname.");
+    throw new Error("Failed to add to blacklist.");
   };
+
+  this.blacklistRemoveHost = async function (hostId, ruleId) {
+
+    postData =
+      `[RULE#${ruleId},0,0,0,0,0#0,0,0,0,0,0]0,0` +
+      _RequestNewLine +
+      `[INTERNAL_HOST#${hostId},0,0,0,0,0#0,0,0,0,0,0]1,0` +
+      _RequestNewLine;
+  
+    urlParams = "4&4";
+    responseText = await apiWebRequest(apiData, urlParams, postData);
+  
+    if (responseText == "[error]0") {
+      return { success: true };
+    }
+  
+    throw new Error("Failed to add to blacklist.");
+  };  
 }
 
 async function apiWebRequest(apiData, urlParams, postData) {
@@ -129,8 +155,8 @@ async function apiWebRequest(apiData, urlParams, postData) {
   }
 }
 
-function parseRouterResponse(data) {
-  const lines = data.split(/\r?\n/);
+function parseRouterResponse(response) {
+  const lines = response.toString().split(/\r?\n/);
   const entries = [];
   let i = 0;
 

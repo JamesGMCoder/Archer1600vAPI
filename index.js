@@ -33,7 +33,7 @@ app.get("/blacklistAddHost", async (req, res) => {
   try {
     const { mac, hostname } = req.query;
 
-    var result = await globalState.setHostname(mac, hostname);
+    var result = await globalState.blacklistAddHost(mac, hostname);
     res.json(result);
   } catch (error) {
     return res.status(400).json({ success: false, error: error.message });
@@ -42,9 +42,9 @@ app.get("/blacklistAddHost", async (req, res) => {
 
 app.get("/blacklistRemoveHost", async (req, res) => {
   try {
-    const { mac, hostname } = req.query;
+    const {hostId, ruleId  } = req.query;
 
-    var result = await globalState.setHostname(mac, hostname);
+    var result = await globalState.blacklistRemoveHost(hostId, ruleId);
     res.json(result);
   } catch (error) {
     return res.status(400).json({ success: false, error: error.message });

@@ -1,5 +1,5 @@
 var authentication = require('./api/authentication');
-const router = require('./api/router');
+const router = require('./api/router').router;
 fs = require('fs')
 
 module.exports = globalState;
@@ -18,14 +18,6 @@ function globalState()
     const authenticationApi = new authentication(apiData.apiBaseUrl);
     const routerApi = new router(apiData);
 
-    this.setup = function(){
-
-    }
-
-    this.apiBaseUrl = function(){
-        return apiBaseUrl;
-    }
-
     this.isAuthenticated = async function(){
         
         // Ping the Router with current credentials to see if still alove.
@@ -41,13 +33,6 @@ function globalState()
         return true;
     }
 
-    this.setHostname = async function(mac, hostname){
-        if (await this.isAuthenticated())
-        {
-            return await routerApi.setHostname(mac, hostname);
-        }
-    }
-
     this.getHosts = async function(){
         if (await this.isAuthenticated())
         {
@@ -56,7 +41,7 @@ function globalState()
                 devices: []
             };
 
-            allDevices = await routerApi.getAllDevices();
+            allDevices = await routerApi.getAllHosts();
             blackList = await  routerApi.getBlackList();
 
             const macToEntryMapping = {};
@@ -93,6 +78,29 @@ function globalState()
             });
 
             return result;
+        }
+    }    
+
+    this.blacklistAddHost = async function(mac, hostname){
+        if (await this.isAuthenticated())
+        {
+            result = await routerApi.blacklistAddHost(mac, hostname);
+            return result;
+        }
+    }
+
+    this.blacklistRemoveHost = async function(hostId, ruleId){
+        if (await this.isAuthenticated())
+        {
+            result = await routerApi.blacklistRemoveHost(hostId, ruleId);
+            return result;
+        }            
+    }    
+
+    this.setHostname = async function(mac, hostname){
+        if (await this.isAuthenticated())
+        {
+            return await routerApi.setHostname(mac, hostname);
         }
     }
 }
