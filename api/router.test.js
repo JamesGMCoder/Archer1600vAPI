@@ -1,6 +1,6 @@
 const parseRouterResponse = require('./router').parseRouterResponse;
 
-test('parseRouterResponse', () => {
+test('parseRouterResponse addBlackList', () => {
     var input = '[197,0,0,0,0,0]0\ntype=1\nentryName=OPPP_Phone_ACL\nmac=52:93:DF:18:97:DE\nisParentCtrl=0\n[170,0,0,0,0,0]1\nisParentCtrl=0\nruleName=OPPP_Phone_ACL\ninternalHostRef=OPPP_Phone_ACL\nexternalHostRef=\nscheduleRef=\naction=1\nenable=1\n[error]0';
     var result = parseRouterResponse(input);
     expect(result[2].id).toBe("0");

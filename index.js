@@ -1,6 +1,6 @@
 const express = require("express");
 const bodyParser = require("body-parser");
-const rsaEncrypt = require("./tools/encrypt");
+const { validateHostname, validateMac } = require('./tools/validation');
 
 const global = require("./globalState");
 const globalState = new global();
@@ -14,7 +14,7 @@ app.get("/getHosts", async (req, res) => {
     var result = await globalState.getHosts();
     res.json(result);
   } catch (error) {
-    return res.status(400).json({ error: error.message });
+    return res.json({ error: error.message });
   }
 });
 
@@ -22,10 +22,32 @@ app.get("/setHostname", async (req, res) => {
   try {
     const { mac, hostname } = req.query;
 
+    if (!validateHostname(hostname) || !validateMac(mac)){
+      return res.json({ success: false, error: "Invalid Hostname or Mac" });
+    }
+
     var result = await globalState.setHostname(mac, hostname);
     res.json(result);
   } catch (error) {
-    return res.status(400).json({ success: false, error: error.message });
+    return res.json({ success: false, error: error.message });
+  }
+});
+
+app.get("/blacklistEnable", async (req, res) => {
+  try {
+    var result = await globalState.blackListEnable();
+    res.json(result);
+  } catch (error) {
+    return res.json({ success: false, error: error.message });
+  }
+});
+
+app.get("/blacklistDisable", async (req, res) => {
+  try {
+    var result = await globalState.blackListDisable();
+    res.json(result);
+  } catch (error) {
+    return res.json({ success: false, error: error.message });
   }
 });
 
@@ -36,7 +58,7 @@ app.get("/blacklistAddHost", async (req, res) => {
     var result = await globalState.blacklistAddHost(mac, hostname);
     res.json(result);
   } catch (error) {
-    return res.status(400).json({ success: false, error: error.message });
+    return res.json({ success: false, error: error.message });
   }
 });
 
@@ -47,7 +69,7 @@ app.get("/blacklistRemoveHost", async (req, res) => {
     var result = await globalState.blacklistRemoveHost(hostId, ruleId);
     res.json(result);
   } catch (error) {
-    return res.status(400).json({ success: false, error: error.message });
+    return res.json({ success: false, error: error.message });
   }
 });
 

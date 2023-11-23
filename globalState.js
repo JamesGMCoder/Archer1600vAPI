@@ -33,17 +33,32 @@ function globalState()
         return true;
     }
 
+    this.logout = async function(){
+        await routerApi.isSessionAlive(); // The Router Calls this before calling logout.
+        return await routerApi.logout();
+    }
+
     this.getHosts = async function(){
         if (await this.isAuthenticated())
         {
             result = {
+                success: true,
                 blackListEnabled: false,
-                devices: []
+                hosts: []
             };
 
-            allDevices = await routerApi.getAllHosts();
-            blackList = await  routerApi.getBlackList();
+            allhosts = await routerApi.getAllHosts();
+            blackListStatus = await routerApi.getBlackListStatus();
+            blackList = await routerApi.getBlackList();
 
+            if (blackListStatus && blackListStatus.length > 0){
+                if (blackListStatus[0].enable == '1'){
+                    result.blackListEnabled = true;
+                }
+            } else {
+                throw new Error("Unable to get Blacklist Status");
+            }
+        
             const macToEntryMapping = {};
 
             blackList.forEach((item) => {
@@ -52,39 +67,55 @@ function globalState()
                 }
             });
 
-            allDevices.forEach((item) => {
-                device = {
+            allhosts.forEach((item) => {
+                host = {
                     mac: item.MACAddress,
-                    host: item.hostName,
+                    hostname: item.hostName,
                     ip: item.IPAddress,
+                    isOnline: item.active == "1",
                     isBlackListed: false
                 }
 
                 if (item.MACAddress && macToEntryMapping[item.MACAddress]){
                     blackListItem = macToEntryMapping[item.MACAddress];
 
-                    device.isBlackListed = true;
-                    device.blackListName = blackListItem.entryName;
-                    device.blackListHostId = blackListItem.id;
+                    host.isBlackListed = true;
+                    host.blackListName = blackListItem.entryName;
+                    host.blackListHostId = blackListItem.id;
 
                     blackList.forEach((itemb) => {
                         if (blackListItem.entryName == itemb.ruleName){
-                            device.blackListRuleId = itemb.id;
+                            host.blackListRuleId = itemb.id;
                         }
                     });
                 }
 
-                result.devices.push(device);
+                result.hosts.push(host);
             });
 
             return result;
         }
-    }    
+    }
+
+    this.blackListEnable = async function () {
+        if (await this.isAuthenticated())
+        {
+            return await routerApi.blackListEnable();
+        }        
+    }
+
+    this.blackListDisable = async function () {
+        if (await this.isAuthenticated())
+        {
+            return await routerApi.blackListDisable();
+        }   
+    }
 
     this.blacklistAddHost = async function(mac, hostname){
         if (await this.isAuthenticated())
         {
             result = await routerApi.blacklistAddHost(mac, hostname);
+            routerApi.isSessionAlive();
             return result;
         }
     }
@@ -93,6 +124,7 @@ function globalState()
         if (await this.isAuthenticated())
         {
             result = await routerApi.blacklistRemoveHost(hostId, ruleId);
+            routerApi.isSessionAlive();
             return result;
         }            
     }    

@@ -1,3 +1,5 @@
+const { response } = require("express");
+
 module.exports = {
   router,
   parseRouterResponse,
@@ -30,10 +32,32 @@ function router(data) {
     return false;
   };
 
+  this.logout = async function(){
+      postData =
+        "[/cgi/logout#0,0,0,0,0,0#0,0,0,0,0,0]0,0" +
+        _RequestNewLine;
+      urlParams = "8";
+      await apiWebRequest(apiData, urlParams, postData);
+  
+      return { success: true };
+    };
+
   this.getAllHosts = async function () {
 
     postData = "[LAN_HOST_ENTRY#0,0,0,0,0,0#0,0,0,0,0,0]0,0" + _RequestNewLine;
     urlParams = "5";
+    responseText = await apiWebRequest(apiData, urlParams, postData);
+    return parseRouterResponse(responseText);
+  };
+
+  this.getBlackListStatus = async function () {
+
+    postData = 
+      "[FIREWALL#0,0,0,0,0,0#0,0,0,0,0,0]0,1" + 
+      _RequestNewLine +
+      "enable" +
+      _RequestNewLine;
+    urlParams = "1,5";
     responseText = await apiWebRequest(apiData, urlParams, postData);
     return parseRouterResponse(responseText);
   };
@@ -48,6 +72,48 @@ function router(data) {
     responseText = await apiWebRequest(apiData, urlParams, postData);
     return parseRouterResponse(responseText);
   };
+
+  this.blackListEnable = async function () {
+    postData =
+      "[FIREWALL#0,0,0,0,0,0#0,0,0,0,0,0]0,1" +
+      _RequestNewLine +
+      "enable=1" +
+      _RequestNewLine + 
+      "[IP6_FIREWALL#0,0,0,0,0,0#0,0,0,0,0,0]1,1" +
+      _RequestNewLine +
+      "enable=1" +
+      _RequestNewLine;
+
+    urlParams = "2&2";
+    responseText = await apiWebRequest(apiData, urlParams, postData);
+
+    if (responseText == "[error]0") {
+      return { success: true };
+    }
+
+    throw new Error("Failed to enable Blacklist.");
+  };
+
+  this.blackListDisable = async function () {
+    postData =
+      "[FIREWALL#0,0,0,0,0,0#0,0,0,0,0,0]0,1" +
+      _RequestNewLine +
+      "enable=0" +
+      _RequestNewLine + 
+      "[IP6_FIREWALL#0,0,0,0,0,0#0,0,0,0,0,0]1,1" +
+      _RequestNewLine +
+      "enable=0" +
+      _RequestNewLine;
+
+    urlParams = "2&2";
+    responseText = await apiWebRequest(apiData, urlParams, postData);
+
+    if (responseText == "[error]0") {
+      return { success: true };
+    }
+
+    throw new Error("Failed to disable Blacklist.");
+  };  
 
   this.setHostname = async function (mac, hostname) {
 
@@ -102,9 +168,16 @@ function router(data) {
     urlParams = "3&3";
     responseText = await apiWebRequest(apiData, urlParams, postData);
 
-    var rr = parseRouterResponse(responseText);
-    if (responseText == "[error]0") {
-      return { success: true };
+    if (responseText != undefined)
+    {
+      var results = parseRouterResponse(responseText);
+      if (results.length == 3 && results[2].id == "0"){
+        return { 
+          success: true,
+          blackListHostId:results[0].id,
+          blackListRuleId:results[1].id
+        };
+      }
     }
 
     throw new Error("Failed to add to blacklist.");
@@ -125,7 +198,7 @@ function router(data) {
       return { success: true };
     }
   
-    throw new Error("Failed to add to blacklist.");
+    throw new Error("Failed to remove from blacklist." + responseText);
   };  
 }
 
