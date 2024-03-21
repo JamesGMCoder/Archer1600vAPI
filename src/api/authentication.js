@@ -1,5 +1,5 @@
 const axios = require('axios');
-const rsaEncrypt = require('../tools/encrypt');
+const rsaEncrypt = require('../../tools/encrypt');
 
 module.exports = authentication;
 

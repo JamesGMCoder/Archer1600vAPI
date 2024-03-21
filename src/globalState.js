@@ -7,7 +7,7 @@ module.exports = globalState;
 function globalState()
 {
     username = "admin";
-    password = "XXXXXX";
+    password = "C3lica";
 
     const apiData = {
         apiBaseUrl: "http://192.168.1.1",
@@ -48,6 +48,8 @@ function globalState()
             };
 
             allhosts = await routerApi.getAllHosts();
+            allhosts.sort((a, b) => (a.hostName > b.hostName) ? 1 : -1)
+
             blackListStatus = await routerApi.getBlackListStatus();
             blackList = await routerApi.getBlackList();
 
@@ -73,7 +75,8 @@ function globalState()
                     hostname: item.hostName,
                     ip: item.IPAddress,
                     isOnline: item.active == "1",
-                    isBlackListed: false
+                    isBlackListed: false,
+                    connectionType: item.active != "1" ? "-" : item.X_TP_ConnType == "0" ? "Wired" : item.X_TP_ConnType == "3" ? "Wireless 5.0" : "Wireless 2.4"
                 }
 
                 if (item.MACAddress && macToEntryMapping[item.MACAddress]){
@@ -93,6 +96,7 @@ function globalState()
                 result.hosts.push(host);
             });
 
+            //result.hosts.sort((a, b) => (a.hostName > b.hostName) ? 1 : -1)
             return result;
         }
     }

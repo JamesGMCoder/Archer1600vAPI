@@ -1,6 +1,6 @@
 const express = require("express");
 const bodyParser = require("body-parser");
-const { validateHostname, validateMac } = require('./tools/validation');
+const { validateHostname, validateMac } = require('../tools/validation');
 
 const global = require("./globalState");
 const globalState = new global();
@@ -61,7 +61,7 @@ app.get("/blacklistAddHost", async (req, res) => {
     return res.json({ success: false, error: error.message });
   }
 });
-
+6
 app.get("/blacklistRemoveHost", async (req, res) => {
   try {
     const {hostId, ruleId  } = req.query;
