@@ -7,7 +7,7 @@ module.exports = globalState;
 function globalState()
 {
     username = "admin";
-    password = "C3lica";
+    password = "XXXXXX";
 
     const apiData = {
         apiBaseUrl: "http://192.168.1.1",

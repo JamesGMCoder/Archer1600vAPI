@@ -6,7 +6,6 @@ const global = require("./globalState");
 const globalState = new global();
 
 const app = express();
-const port = process.env.PORT || 3000;
 app.use(bodyParser.json());
 
 app.get("/getHosts", async (req, res) => {
@@ -31,6 +30,11 @@ app.get("/setHostname", async (req, res) => {
   } catch (error) {
     return res.json({ success: false, error: error.message });
   }
+});
+
+app.get("/jim", async (req, res) => {
+    var result = {"a": "abc"}
+    res.json(result); 
 });
 
 app.get("/blacklistEnable", async (req, res) => {
@@ -73,6 +77,4 @@ app.get("/blacklistRemoveHost", async (req, res) => {
   }
 });
 
-app.listen(port, () => {
-  console.log(`Server is running on port ${port}`);
-});
+module.exports = app;

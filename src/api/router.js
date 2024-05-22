@@ -55,7 +55,7 @@ function router(data) {
     postData = 
       "[FIREWALL#0,0,0,0,0,0#0,0,0,0,0,0]0,1" + 
       _RequestNewLine +
-      "enable" +
+      "enable" + 
       _RequestNewLine;
     urlParams = "1,5";
     responseText = await apiWebRequest(apiData, urlParams, postData);
