@@ -1,19 +1,19 @@
 var authentication = require('./api/authentication');
 const router = require('./api/router').router;
 fs = require('fs')
+require('dotenv').config();
 
 module.exports = globalState;
 
-function globalState()
-{
-    username = "admin";
-    password = "XXXXXX";
+function globalState() {
+    username = process.env.ROUTER_USERNAME;
+    password = process.env.ROUTER_PASSWORD;
 
     const apiData = {
-        apiBaseUrl: "http://192.168.1.1",
-        cookieId: "",
-        tokenId: ""
-    }
+    apiBaseUrl: process.env.ROUTER_API_BASE_URL,
+    cookieId: "",
+    tokenId: ""
+};
 
     const authenticationApi = new authentication(apiData.apiBaseUrl);
     const routerApi = new router(apiData);

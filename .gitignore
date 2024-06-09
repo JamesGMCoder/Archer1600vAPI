@@ -9,3 +9,4 @@ package-lock.json
 
 # Ignore my local files
 Transactions/
+.env

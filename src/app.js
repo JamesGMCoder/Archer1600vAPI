@@ -32,11 +32,6 @@ app.get("/setHostname", async (req, res) => {
   }
 });
 
-app.get("/jim", async (req, res) => {
-    var result = {"a": "abc"}
-    res.json(result); 
-});
-
 app.get("/blacklistEnable", async (req, res) => {
   try {
     var result = await globalState.blackListEnable();

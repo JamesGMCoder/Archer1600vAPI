@@ -95,7 +95,7 @@ function authentication(url){
               throw new Error(`Failed to fetch data. Status: ${response.status}`);
             }
           } catch (error) {
-            console.log('catch')
+            console.log('authenticate error: ' + error)
             throw error;
           }
     }

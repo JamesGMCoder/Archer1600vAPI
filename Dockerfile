@@ -1,8 +1,8 @@
 # Use the official Node.js image as the base image
-FROM node:14
+FROM node:20.11.1
 
 # Set the working directory in the container
-WORKDIR /app
+WORKDIR /usr/src/app
 
 # Copy package.json and package-lock.json to the working directory
 COPY package*.json ./
@@ -17,4 +17,4 @@ COPY . .
 EXPOSE 3000
 
 # Command to run the application
-CMD ["node", "index.js"]
+CMD ["node", "src/index.js"]
