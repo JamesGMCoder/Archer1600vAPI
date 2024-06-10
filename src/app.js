@@ -8,6 +8,22 @@ const globalState = new global();
 const app = express();
 app.use(bodyParser.json());
 
+app.use((req, res, next) => {
+  console.log("<- Request ->");
+  console.log(req.originalUrl);
+  next();
+});
+
+app.use(function responseLogger(req, res, next) {
+  const originalSendFunc = res.send.bind(res);
+  res.send = function (body) {
+    console.log("<- Response ->");
+    console.log(body); // Log the response body
+    return originalSendFunc(body);
+  };
+  next();
+});
+
 app.get("/getHosts", async (req, res) => {
   try {
     var result = await globalState.getHosts();

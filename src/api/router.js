@@ -47,7 +47,13 @@ function router(data) {
     postData = "[LAN_HOST_ENTRY#0,0,0,0,0,0#0,0,0,0,0,0]0,0" + _RequestNewLine;
     urlParams = "5";
     responseText = await apiWebRequest(apiData, urlParams, postData);
-    return parseRouterResponse(responseText);
+    const data = parseRouterResponse(responseText);
+
+    if (data.errorCode != 0){
+      throw new Error("Unable to Fetch Host Data");
+    }
+
+    return data.entries;
   };
 
   this.getBlackListStatus = async function () {
@@ -59,7 +65,13 @@ function router(data) {
       _RequestNewLine;
     urlParams = "1,5";
     responseText = await apiWebRequest(apiData, urlParams, postData);
-    return parseRouterResponse(responseText);
+    const data = parseRouterResponse(responseText);
+
+    if (data.errorCode != 0){
+      throw new Error("Unable to Fetch Black List Status");
+    }
+
+    return data.entries;
   };
 
   this.getBlackList = async function () {
@@ -70,7 +82,13 @@ function router(data) {
       _RequestNewLine;
     urlParams = "5&5";
     responseText = await apiWebRequest(apiData, urlParams, postData);
-    return parseRouterResponse(responseText);
+    const data = parseRouterResponse(responseText);
+
+    if (data.errorCode != 0){
+      throw new Error("Unable to Fetch Blacklist");
+    }
+
+    return data.entries;
   };
 
   this.blackListEnable = async function () {
@@ -87,11 +105,13 @@ function router(data) {
     urlParams = "2&2";
     responseText = await apiWebRequest(apiData, urlParams, postData);
 
-    if (responseText == "[error]0") {
-      return { success: true };
+    const data = parseRouterResponse(responseText);
+
+    if (data.errorCode != 0){
+      throw new Error("Unable to Fetch Blacklist");
     }
 
-    throw new Error("Failed to enable Blacklist.");
+    return data.entries;
   };
 
   this.blackListDisable = async function () {
@@ -112,7 +132,7 @@ function router(data) {
       return { success: true };
     }
 
-    throw new Error("Failed to disable Blacklist.");
+    throw new Error(`Failed to disable Blacklist. ${data.errorCode}`);
   };  
 
   this.setHostname = async function (mac, hostname) {
@@ -131,7 +151,7 @@ function router(data) {
       return { success: true };
     }
 
-    throw new Error("Failed to update hostname.");
+    throw new Error(`Failed to update Hostname. ${data.errorCode}`);
   };
 
   this.blacklistAddHost = async function (mac, hostname) {
@@ -170,8 +190,15 @@ function router(data) {
 
     if (responseText != undefined)
     {
-      var results = parseRouterResponse(responseText);
-      if (results.length == 3 && results[2].id == "0"){
+      const data = parseRouterResponse(responseText);
+
+      if (data.errorCode != 0){
+        throw new Error(`Unable to Add Host. Error Code: ${data.errorCode}`);
+      }
+
+      const results = data.entries;
+
+      if (results.length == 2){
         return { 
           success: true,
           blackListHostId:results[0].id,
@@ -180,7 +207,7 @@ function router(data) {
       }
     }
 
-    throw new Error("Failed to add to blacklist.");
+    throw new Error("Failed to Add Host to blacklist.");
   };
 
   this.blacklistRemoveHost = async function (hostId, ruleId) {
@@ -193,12 +220,12 @@ function router(data) {
   
     urlParams = "4&4";
     responseText = await apiWebRequest(apiData, urlParams, postData);
-  
+
     if (responseText == "[error]0") {
       return { success: true };
     }
-  
-    throw new Error("Failed to remove from blacklist." + responseText);
+
+    throw new Error(`Failed to Remove Host from Blacklist. ErrorCode: ${data.errorCode}`);
   };  
 }
 
@@ -221,7 +248,7 @@ async function apiWebRequest(apiData, urlParams, postData) {
     if (response.ok) {
       return await response.text();
     } else {
-      throw new Error(`Failed to fetch data. Status: ${response.status}`);
+      throw new Error(`Failed to fetch data. ErrorCode: ${response.status}`);
     }
   } catch (error) {
     throw error;
@@ -231,15 +258,22 @@ async function apiWebRequest(apiData, urlParams, postData) {
 function parseRouterResponse(response) {
   const lines = response.toString().split(/\r?\n/);
   const entries = [];
-  let i = 0;
+  let errorCode = 1; // default error code
 
+  let i = 0;
   while (i < lines.length) {
-    if (lines[i].startsWith("[")) {
+    if (lines[i].startsWith("[error]")) {
+      const match = lines[i].match(/\[error\](\d+)/);
+      if (match) {
+        errorCode = Number(match[1]);
+      }
+      i++;
+    } else if (lines[i].startsWith("[")) {
       const entry = {
         idFull: lines[i],
       };
 
-      match = entry.idFull.match(/(\d+)/); // Match one or more digits
+      const match = entry.idFull.match(/(\d+)/); // Match one or more digits
       if (match) {
         entry.id = match[0];
       }
@@ -256,5 +290,9 @@ function parseRouterResponse(response) {
       i++;
     }
   }
-  return entries;
+
+  return {
+    entries: entries,
+    errorCode: errorCode,
+  };
 }
