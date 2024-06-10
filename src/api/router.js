@@ -108,10 +108,10 @@ function router(data) {
     const data = parseRouterResponse(responseText);
 
     if (data.errorCode != 0){
-      throw new Error("Unable to Fetch Blacklist");
+      throw new Error("Unable to Enable Blacklist");
     }
 
-    return data.entries;
+    return { success: true };
   };
 
   this.blackListDisable = async function () {
@@ -128,11 +128,13 @@ function router(data) {
     urlParams = "2&2";
     responseText = await apiWebRequest(apiData, urlParams, postData);
 
-    if (responseText == "[error]0") {
-      return { success: true };
+    const data = parseRouterResponse(responseText);
+    
+    if (data.errorCode != 0){
+      throw new Error("Unable to Disable Blacklist");
     }
 
-    throw new Error(`Failed to disable Blacklist. ${data.errorCode}`);
+    return { success: true };
   };  
 
   this.setHostname = async function (mac, hostname) {
