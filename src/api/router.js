@@ -50,7 +50,7 @@ function router(data) {
     const data = parseRouterResponse(responseText);
 
     if (data.errorCode != 0){
-      throw new Error(`Unable to Fetch Host Data: ${data.errorCode}`);
+      throw new Error("Unable to Fetch Host Data");
     }
 
     return data.entries;
@@ -68,7 +68,7 @@ function router(data) {
     const data = parseRouterResponse(responseText);
 
     if (data.errorCode != 0){
-      throw new Error(`Unable to Fetch Black List Status: ${data.errorCode}`);
+      throw new Error("Unable to Fetch Black List Status");
     }
 
     return data.entries;
@@ -85,7 +85,7 @@ function router(data) {
     const data = parseRouterResponse(responseText);
 
     if (data.errorCode != 0){
-      throw new Error(`Unable to Fetch Blacklist: ${data.errorCode}`);
+      throw new Error("Unable to Fetch Blacklist");
     }
 
     return data.entries;
@@ -108,10 +108,10 @@ function router(data) {
     const data = parseRouterResponse(responseText);
 
     if (data.errorCode != 0){
-      throw new Error(`Unable to Enable Blacklist: ${data.errorCode}`);
+      throw new Error("Unable to Fetch Blacklist");
     }
 
-    return { success: true };
+    return data.entries;
   };
 
   this.blackListDisable = async function () {
@@ -127,14 +127,12 @@ function router(data) {
 
     urlParams = "2&2";
     responseText = await apiWebRequest(apiData, urlParams, postData);
-    
-    const data = parseRouterResponse(responseText);
 
-    if (data.errorCode != 0){
-      throw new Error(`Unable to Disable Blacklist: ${data.errorCode}`);
+    if (responseText == "[error]0") {
+      return { success: true };
     }
 
-    return { success: true };
+    throw new Error(`Failed to disable Blacklist. ${data.errorCode}`);
   };  
 
   this.setHostname = async function (mac, hostname) {
@@ -149,13 +147,11 @@ function router(data) {
     urlParams = "2";
     responseText = await apiWebRequest(apiData, urlParams, postData);
 
-    const data = parseRouterResponse(responseText);
-
-    if (data.errorCode != 0){
-      throw new Error(`Unable to Update Hostname: ${data.errorCode}`);
+    if (responseText == "[error]0") {
+      return { success: true };
     }
 
-    return { success: true };  
+    throw new Error(`Failed to update Hostname. ${data.errorCode}`);
   };
 
   this.blacklistAddHost = async function (mac, hostname) {
@@ -197,7 +193,7 @@ function router(data) {
       const data = parseRouterResponse(responseText);
 
       if (data.errorCode != 0){
-        throw new Error(`Unable to Add Host to Blacklist: ${data.errorCode}`);
+        throw new Error(`Unable to Add Host. Error Code: ${data.errorCode}`);
       }
 
       const results = data.entries;
@@ -211,7 +207,7 @@ function router(data) {
       }
     }
 
-    throw new Error("Unable to Add Host to Blacklist (length < 2).");
+    throw new Error("Failed to Add Host to blacklist.");
   };
 
   this.blacklistRemoveHost = async function (hostId, ruleId) {
@@ -225,13 +221,11 @@ function router(data) {
     urlParams = "4&4";
     responseText = await apiWebRequest(apiData, urlParams, postData);
 
-    const data = parseRouterResponse(responseText);
-
-    if (data.errorCode != 0){
-      throw new Error(`Unable to Add Host to Blacklist: ${data.errorCode}`);
+    if (responseText == "[error]0") {
+      return { success: true };
     }
 
-    return { success: true };
+    throw new Error(`Failed to Remove Host from Blacklist. ErrorCode: ${data.errorCode}`);
   };  
 }
 
@@ -254,7 +248,7 @@ async function apiWebRequest(apiData, urlParams, postData) {
     if (response.ok) {
       return await response.text();
     } else {
-      throw new Error(`Web Request Error: ${response.status}`);
+      throw new Error(`Failed to fetch data. ErrorCode: ${response.status}`);
     }
   } catch (error) {
     throw error;

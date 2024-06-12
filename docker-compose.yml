@@ -1,10 +1,11 @@
-version: '3'
+version: '3.8'
+
 services:
-  nodejs-app:
-    build:
-      context: .
-      dockerfile: Dockerfile
+  app:
+    image: jamesgm/archer1600vapi:latest
     ports:
       - "3000:3000"
     environment:
-      NODE_ENV: production
+      - ROUTER_USERNAME=${ROUTER_USERNAME}
+      - ROUTER_PASSWORD=${ROUTER_PASSWORD}
+      - ROUTER_API_BASE_URL=${ROUTER_API_BASE_URL}
