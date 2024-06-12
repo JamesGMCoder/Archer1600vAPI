@@ -24,7 +24,7 @@ app.use(function responseLogger(req, res, next) {
   next();
 });
 
-app.get("/getHosts", async (req, res) => {
+app.get("/api/getHosts", async (req, res) => {
   try {
     var result = await globalState.getHosts();
     res.json(result);
@@ -33,7 +33,7 @@ app.get("/getHosts", async (req, res) => {
   }
 });
 
-app.get("/setHostname", async (req, res) => {
+app.get("/api/setHostname", async (req, res) => {
   try {
     const { mac, hostname } = req.query;
 
@@ -48,7 +48,7 @@ app.get("/setHostname", async (req, res) => {
   }
 });
 
-app.get("/blacklistEnable", async (req, res) => {
+app.get("/api/blacklistEnable", async (req, res) => {
   try {
     var result = await globalState.blackListEnable();
     res.json(result);
@@ -57,7 +57,7 @@ app.get("/blacklistEnable", async (req, res) => {
   }
 });
 
-app.get("/blacklistDisable", async (req, res) => {
+app.get("/api/blacklistDisable", async (req, res) => {
   try {
     var result = await globalState.blackListDisable();
     res.json(result);
@@ -66,7 +66,7 @@ app.get("/blacklistDisable", async (req, res) => {
   }
 });
 
-app.get("/blacklistAddHost", async (req, res) => {
+app.get("/api/blacklistAddHost", async (req, res) => {
   try {
     const { mac, hostname } = req.query;
 
@@ -77,7 +77,7 @@ app.get("/blacklistAddHost", async (req, res) => {
   }
 });
 6
-app.get("/blacklistRemoveHost", async (req, res) => {
+app.get("/api/blacklistRemoveHost", async (req, res) => {
   try {
     const {hostId, ruleId  } = req.query;
 
