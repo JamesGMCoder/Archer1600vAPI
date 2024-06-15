@@ -1,6 +1,6 @@
 var authentication = require('./api/authentication');
 const router = require('./api/router').router;
-fs = require('fs')
+const getLeaseTime = require('./leaseTime').getLeaseTime;
 require('dotenv').config();
 
 module.exports = globalState;
@@ -76,7 +76,10 @@ function globalState() {
                     ip: item.IPAddress,
                     isOnline: item.active == "1",
                     isBlackListed: false,
-                    connectionType: item.active != "1" ? "-" : item.X_TP_ConnType == "0" ? "Wired" : item.X_TP_ConnType == "3" ? "Wireless 5.0" : "Wireless 2.4"
+                    connectionType: item.active != "1" ? "-" : item.X_TP_ConnType == "0" ? "Wired" : item.X_TP_ConnType == "3" ? "Wireless 5.0" : "Wireless 2.4",
+                    lease: item.leaseTimeRemaining == -1 ? "Static" : "Dynamic",
+                    leaseTime: getLeaseTime(item.leaseTimeRemaining),
+
                 }
 
                 if (item.MACAddress && macToEntryMapping[item.MACAddress]){
@@ -137,6 +140,46 @@ function globalState() {
         if (await this.isAuthenticated())
         {
             return await routerApi.setHostname(mac, hostname);
+        }
+    }
+
+    this.getInterfaceConfiguration = async function(){
+        if (await this.isAuthenticated())
+        {
+            return await routerApi.getInterfaceConfiguration();
+        }
+    }
+
+    this.staticHostAdd = async function(mac, ip){
+        if (await this.isAuthenticated())
+        {
+            return await routerApi.staticHostAdd(mac, ip);
+        }
+    }
+
+    this.staticHostRemove = async function(mac){
+        if (await this.isAuthenticated())
+        {
+            /* 
+                [
+                {
+                    idFull: "[1,1,0,0,0,0]0",
+                    id: "1",
+                    chaddr: "F8:B1:56:C1:A8:B5",
+                },
+            */            
+            const listOfIdsByMac = await routerApi.staticHostRemoveIdList();
+            const item = listOfIdsByMac.find(item => item.chaddr === mac);
+
+            if (!item){
+                throw new Error(`Unable to Find MAC ${mac}`);
+            }
+
+            // The top 6 numbers from idFull need to go into request
+            // "[LAN_DHCP_STATIC_ADDR#1,5,0,0,0,0#0,0,0,0,0,0]0,1" 
+            id = item.idFull.slice(1, -2);
+
+            return await routerApi.staticHostRemove(id);
         }
     }
 }

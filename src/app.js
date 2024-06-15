@@ -76,12 +76,45 @@ app.get("/api/blacklistAddHost", async (req, res) => {
     return res.json({ success: false, error: error.message });
   }
 });
-6
+
 app.get("/api/blacklistRemoveHost", async (req, res) => {
   try {
-    const {hostId, ruleId  } = req.query;
+    const { hostId, ruleId } = req.query;
 
     var result = await globalState.blacklistRemoveHost(hostId, ruleId);
+    res.json(result);
+  } catch (error) {
+    return res.json({ success: false, error: error.message });
+  }
+});
+
+app.get("/api/getInterfaceConfiguration", async (req, res) => {
+  try {
+    const { hostId, ruleId } = req.query;
+
+    var result = await globalState.getInterfaceConfiguration();
+    res.json(result);
+  } catch (error) {
+    return res.json({ success: false, error: error.message });
+  }
+});
+
+app.get("/api/staticHostAdd", async (req, res) => {
+  try {
+    const { mac, ip } = req.query;
+
+    var result = await globalState.staticHostAdd(mac, ip);
+    res.json(result);
+  } catch (error) {
+    return res.json({ success: false, error: error.message });
+  }
+});
+
+app.get("/api/staticHostRemove", async (req, res) => {
+  try {
+    const { mac } = req.query;
+
+    var result = await globalState.staticHostRemove(mac);
     res.json(result);
   } catch (error) {
     return res.json({ success: false, error: error.message });

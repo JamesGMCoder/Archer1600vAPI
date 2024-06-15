@@ -21,6 +21,21 @@
         ],
         "console": "integratedTerminal",
         "internalConsoleOptions": "neverOpen"
+      },
+      {
+        "type": "node",
+        "request": "launch",
+        "name": "Test API Call",
+        "program": "${workspaceFolder}/testAPI/testIntegration.js",
+        "env": {
+          "ROUTER_USERNAME": "admin",
+          "ROUTER_PASSWORD": "C3lica",
+          "ROUTER_API_BASE_URL": "http://192.168.1.1"
+        },
+        "console": "integratedTerminal",
+        "internalConsoleOptions": "neverOpen",
+        "restart": true,
+        "sourceMaps": true
       }
     ]
   }

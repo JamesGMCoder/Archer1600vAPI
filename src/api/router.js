@@ -233,6 +233,98 @@ function router(data) {
 
     return { success: true };
   };  
+
+  this.getInterfaceConfiguration = async function () {
+
+    postData = 
+    "[LAN_IP_INTF#0,0,0,0,0,0#1,0,0,0,0,0]0,3" + 
+    _RequestNewLine +
+    "IPInterfaceIPAddress" +
+    _RequestNewLine +
+    "IPInterfaceSubnetMask" +
+    _RequestNewLine +
+    "X_TP_MACAddress" +
+    _RequestNewLine +
+    "[LAN_IGMP_SNOOP#1,0,0,0,0,0#0,0,0,0,0,0]1,2" + 
+    _RequestNewLine +
+    "enabled" +
+    _RequestNewLine +
+    "Mode" +
+    _RequestNewLine +
+    "[LAN_HOST_CFG#1,0,0,0,0,0#0,0,0,0,0,0]2,0" +
+    _RequestNewLine;
+    
+    urlParams = "6&1&1";
+    responseText = await apiWebRequest(apiData, urlParams, postData);
+    const data = parseRouterResponse(responseText);
+
+    if (data.errorCode != 0){
+      throw new Error("Unable to Fetch Interface Configuration");
+    }
+
+    return data.entries;
+  };
+
+  this.staticHostAdd = async function (mac, ip) {
+
+    postData = 
+    "[LAN_DHCP_STATIC_ADDR#0,0,0,0,0,0#1,0,0,0,0,0]0,3" + 
+    _RequestNewLine +
+    "chaddr=" + mac +
+    _RequestNewLine +
+    "yiaddr=" + ip +
+    _RequestNewLine +
+    "enable=1" +
+    _RequestNewLine;
+    
+    urlParams = "3";
+    responseText = await apiWebRequest(apiData, urlParams, postData);
+    const data = parseRouterResponse(responseText);
+
+    if (data.errorCode != 0){
+      throw new Error("Unable to Add Static Host");
+    }
+
+    return { success: true };
+  };
+
+  // id = '1,29,0,0,0,0'
+  this.staticHostRemove = async function (id) {
+
+    // [LAN_DHCP_STATIC_ADDR#1,29,0,0,0,0#0,0,0,0,0,0]0,0
+     const postData = "[LAN_DHCP_STATIC_ADDR#" + id + "#0,0,0,0,0,0]0,0" + 
+    _RequestNewLine;
+
+    urlParams = "4";
+    responseText = await apiWebRequest(apiData, urlParams, postData);
+    const data = parseRouterResponse(responseText);
+
+    if (data.errorCode != 0){
+      throw new Error("Unable to Remove Static Host");
+    }
+
+    return { success: true };
+  };
+
+  this.staticHostRemoveIdList = async function () {
+
+    const postData = 
+    "[LAN_DHCP_STATIC_ADDR#0,0,0,0,0,0#0,0,0,0,0,0]0,1" + 
+    _RequestNewLine + 
+    "chaddr" + 
+    _RequestNewLine;
+
+    urlParams = "5";
+    responseText = await apiWebRequest(apiData, urlParams, postData);
+    const data = parseRouterResponse(responseText);
+
+    if (data.errorCode != 0){
+      throw new Error("Unable to Remove Id List");
+    }
+
+    return data.entries;
+  };
+
 }
 
 async function apiWebRequest(apiData, urlParams, postData) {
