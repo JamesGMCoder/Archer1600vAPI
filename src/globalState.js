@@ -47,6 +47,7 @@ function globalState() {
                 hosts: []
             };
 
+            // Gets all the hosts from the Router. 
             allhosts = await routerApi.getAllHosts();
             allhosts.sort((a, b) => (a.hostName > b.hostName) ? 1 : -1)
 
@@ -177,7 +178,7 @@ function globalState() {
 
             // The top 6 numbers from idFull need to go into request
             // "[LAN_DHCP_STATIC_ADDR#1,5,0,0,0,0#0,0,0,0,0,0]0,1" 
-            id = item.idFull.slice(1, -2);
+            id = item.idFull.slice(1, -2);  // "[1,1,0,0,0,0]0" -> "1,1,0,0,0,0"
 
             return await routerApi.staticHostRemove(id);
         }

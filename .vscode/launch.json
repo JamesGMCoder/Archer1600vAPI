@@ -4,11 +4,8 @@
       {
         "type": "node",
         "request": "launch",
-        "name": "Launch Server",
+        "name": "Launch API Server",
         "program": "${workspaceFolder}/src/index.js",
-        "env": {
-          "NODE_ENV": "development"
-        },
         "console": "integratedTerminal"
       },
       {
@@ -19,23 +16,21 @@
         "args": [
           "--runInBand"
         ],
-        "console": "integratedTerminal",
-        "internalConsoleOptions": "neverOpen"
+        "console": "integratedTerminal"
       },
       {
         "type": "node",
         "request": "launch",
-        "name": "Test API Call",
+        "name": "Dev Test API Call",
         "program": "${workspaceFolder}/testAPI/testIntegration.js",
-        "env": {
-          "ROUTER_USERNAME": "admin",
-          "ROUTER_PASSWORD": "C3lica",
-          "ROUTER_API_BASE_URL": "http://192.168.1.1"
-        },
-        "console": "integratedTerminal",
-        "internalConsoleOptions": "neverOpen",
-        "restart": true,
-        "sourceMaps": true
+        "console": "integratedTerminal"
+      }, 
+      {
+        "type": "node",
+        "request": "launch",
+        "name": "Launch Mock Server",
+        "program": "${workspaceFolder}/mockAPI/index.js",
+        "console": "integratedTerminal"
       }
     ]
   }

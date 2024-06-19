@@ -69,7 +69,39 @@ Removes a host from the blacklist.
 
 Each endpoint returns a JSON object with an `error` field if an error occurs. The structure of the error response is as follows:
 
+
 ```json
 {
   "error": "Error message"
 }
+```
+
+# Development
+## Running
+
+To run the code
+```
+npm run dev   
+```
+To Debug while it is running press
+```
+F5
+```
+
+## Docker
+
+To build to image:
+```
+docker build -t archerv1600vapi .
+```
+To deploy and run the container
+```
+docker run -p 3000:3000 expressjames -e NAME='jim'
+```
+OR to deploy and run using the docker compose file
+```
+docker-compose up --build       
+```
+
+# Configuration
+

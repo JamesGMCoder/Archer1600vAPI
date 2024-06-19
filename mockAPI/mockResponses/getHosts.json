@@ -1,0 +1,91 @@
+{
+    "success": true,
+    "blackListEnabled": true,
+    "hosts": [
+      {
+        "mac": "11:22:33:33:44:55",
+        "hostname": "James-Laptop",
+        "ip": "192.168.1.107",
+        "isOnline": true,
+        "isBlackListed": false,
+        "connectionType": "Wireless 2.4",
+        "lease": "Dynamic",
+        "leaseTime": "23:30:59"
+      },
+      {
+        "mac": "AA:BB:CC:DD:EE:FF",
+        "hostname": "Jims-Laptop",
+        "ip": "192.168.1.121",
+        "isOnline": true,
+        "isBlackListed": true,
+        "connectionType": "Wireless 5.0",
+        "lease": "Static",
+        "leaseTime": "",
+        "blackListName": "",
+        "blackListHostId": "16"
+      },
+      {
+        "mac": "AA:11:BB:22:CC:33",
+        "hostname": "Jims-Phone",
+        "ip": "192.168.1.109",
+        "isOnline": false,
+        "isBlackListed": false,
+        "connectionType": "-",
+        "lease": "Dynamic",
+        "leaseTime": "07:17:36"
+      },
+      {
+        "mac": "66:77:88:99:00:11",
+        "hostname": "Jims-XboxOneX",
+        "ip": "192.168.1.130",
+        "isOnline": false,
+        "isBlackListed": false,
+        "connectionType": "-",
+        "lease": "Static",
+        "leaseTime": ""
+      },
+      {
+        "mac": "AA:A1:BB:B1:CC:C1",
+        "hostname": "James-Phone",
+        "ip": "192.168.1.120",
+        "isOnline": false,
+        "isBlackListed": false,
+        "connectionType": "-",
+        "lease": "Static",
+        "leaseTime": ""
+      },
+      {
+        "mac": "D1:DD:D2:D2:D2:D2",
+        "hostname": "Games_PC",
+        "ip": "192.168.1.106",
+        "isOnline": true,
+        "isBlackListed": false,
+        "connectionType": "Wired",
+        "lease": "Dynamic",
+        "leaseTime": "20:30:24"
+      },
+      {
+        "mac": "BB:CC:DD:EE:FF:55",
+        "hostname": "TV_Hisense_58",
+        "ip": "192.168.1.181",
+        "isOnline": true,
+        "isBlackListed": false,
+        "connectionType": "Wireless 5.0",
+        "lease": "Static",
+        "leaseTime": ""
+      },
+      {
+        "mac": "E1:E9:C1:C9:A1:A9",
+        "hostname": "TV_Hisense_42",
+        "ip": "192.168.1.222",
+        "isOnline": false,
+        "isBlackListed": true,
+        "connectionType": "-",
+        "lease": "Static",
+        "leaseTime": "",
+        "blackListName": "James-PC_ACL",
+        "blackListHostId": "143",
+        "blackListRuleId": "98"
+      }
+    ]
+  }

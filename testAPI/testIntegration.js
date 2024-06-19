@@ -1,6 +1,6 @@
 const global = require("../src/globalState");
 
-async function testNewApiCall() {
+async function getInterfaceConfiguration() {
   try {
     const globalState = new global();
     const result = await globalState.getInterfaceConfiguration();
@@ -55,6 +55,7 @@ async function staticHostRemove(mac) {
 
 // staticHostRemoveHost();
 // staticHostRemoveIdList();
+getInterfaceConfiguration();
 
 // try{
 //   staticHostAdd("4C:66:41:AC:20:18", "192.168.1.183")
@@ -62,11 +63,11 @@ async function staticHostRemove(mac) {
 //   console.log(e);
 // }
 
-try{
-  staticHostRemove("4C:66:41:AC:20:18")
-} catch(e){
-  console.log(e);
-}
+// try{
+//   staticHostRemove("4C:66:41:AC:20:18")
+// } catch(e){
+//   console.log(e);
+// }
 
-console.log("HERE END");
+console.log("Exiting");
 
