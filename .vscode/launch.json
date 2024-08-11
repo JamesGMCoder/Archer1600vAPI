@@ -1,37 +1,39 @@
 {
-    "version": "0.2.0",
-    "configurations": [
-      {
-        "type": "node",
-        "request": "launch",
-        "name": "Launch API Server",
-        "program": "${workspaceFolder}/src/index.js",
-        "console": "integratedTerminal"
-      },
-      {
-        "type": "node",
-        "request": "launch",
-        "name": "Debug Jest Tests",
-        "program": "${workspaceFolder}/node_modules/jest/bin/jest",
-        "args": [
-          "--runInBand"
-        ],
-        "console": "integratedTerminal"
-      },
-      {
-        "type": "node",
-        "request": "launch",
-        "name": "Dev Test API Call",
-        "program": "${workspaceFolder}/testAPI/testIntegration.js",
-        "console": "integratedTerminal"
-      }, 
-      {
-        "type": "node",
-        "request": "launch",
-        "name": "Launch Mock Server",
-        "program": "${workspaceFolder}/mockAPI/index.js",
-        "console": "integratedTerminal"
-      }
-    ]
-  }
-  
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Launch API Server",
+      "program": "${workspaceFolder}/dist/index.js",
+      "preLaunchTask": "build and copy files",
+      "outFiles": ["${workspaceFolder}/dist/**/*.js"],
+      "sourceMaps": true,
+      "console": "integratedTerminal"
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Debug Jest Tests",
+      "program": "${workspaceFolder}/node_modules/jest/bin/jest",
+      "args": [
+        "--runInBand"
+      ],
+      "console": "integratedTerminal"
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Dev Test API Call",
+      "program": "${workspaceFolder}/dist/testAPI/testIntegration.js",
+      "console": "integratedTerminal"
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Launch Mock Server",
+      "program": "${workspaceFolder}/mockAPI/index.js",
+      "console": "integratedTerminal"
+    }
+  ]
+}

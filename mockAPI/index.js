@@ -56,6 +56,10 @@ app.get("/api/staticHostRemove", async (req, res) => {
   return require('mockResponses/setHostname.json');
 });
 
+app.get("/api/packetCounters", async (req, res) => {
+  return require('mockResponses/packetCounters.json');
+});
+
 // Start Server
 const port = process.env.PORT || 3000;
 

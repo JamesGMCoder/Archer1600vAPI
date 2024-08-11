@@ -1,0 +1,16 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+      {
+        "label": "build and copy files",
+        "type": "shell",
+        "command": "tsc; Copy-Item -Path src\\tools\\encrypt.js -Destination dist\\tools\\encrypt.js",
+        "group": {
+          "kind": "build",
+          "isDefault": true
+        },
+        "problemMatcher": ["$tsc"]
+      }
+    ]
+  }
+  
