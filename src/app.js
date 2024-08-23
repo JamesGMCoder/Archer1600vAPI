@@ -121,4 +121,13 @@ app.get("/api/staticHostRemove", async (req, res) => {
   }
 });
 
+app.get("/api/hostPacketCounters", async (req, res) => {
+  try {
+    var result = await globalState.hostPacketCounters();
+    res.json(result);
+  } catch (error) {
+    return res.json({ success: false, error: error.message });
+  }
+});
+
 module.exports = app;

@@ -43,7 +43,6 @@ function router(data) {
     };
 
   this.getAllHosts = async function () {
-
     postData = "[LAN_HOST_ENTRY#0,0,0,0,0,0#0,0,0,0,0,0]0,0" + _RequestNewLine;
     urlParams = "5";
     responseText = await apiWebRequest(apiData, urlParams, postData);
@@ -51,6 +50,52 @@ function router(data) {
 
     if (data.errorCode != 0){
       throw new Error("Unable to Fetch Host Data");
+    }
+
+    return data.entries;
+  };
+
+  this.hostPacketCounters = async function () {
+
+    postData = 
+      "[LAN_WLAN_ASSOC_DEV#0,0,0,0,0,0#1,1,0,0,0,0]0,4" +
+      _RequestNewLine +
+      "AssociatedDeviceMACAddress" +
+      _RequestNewLine +
+      "X_TP_TotalPacketsSent" +
+      _RequestNewLine +
+      "X_TP_TotalPacketsReceived" +
+      _RequestNewLine +
+      "X_TP_HostName" +
+      _RequestNewLine +
+      "[LAN_WLAN_ASSOC_DEV#0,0,0,0,0,0#1,2,0,0,0,0]1,4" +
+      _RequestNewLine +
+      "AssociatedDeviceMACAddress" +
+      _RequestNewLine +
+      "X_TP_TotalPacketsSent" +
+      _RequestNewLine +
+      "X_TP_TotalPacketsReceived" +
+      _RequestNewLine +
+      "X_TP_HostName" +
+      _RequestNewLine +
+      "[LAN_WLAN_ASSOC_DEV#0,0,0,0,0,0#1,3,0,0,0,0]1,4" +
+      _RequestNewLine +
+      "AssociatedDeviceMACAddress" +
+      _RequestNewLine +
+      "X_TP_TotalPacketsSent" +
+      _RequestNewLine +
+      "X_TP_TotalPacketsReceived" +
+      _RequestNewLine +
+      "X_TP_HostName" +
+      _RequestNewLine;      
+
+    urlParams = "6&6";
+    responseText = await apiWebRequest(apiData, urlParams, postData);
+    const data = parseRouterResponse(responseText);
+    
+
+    if (data.errorCode != 0){
+      throw new Error("Unable to Fetch Black List Status");
     }
 
     return data.entries;

@@ -41,6 +41,7 @@ function globalState() {
     this.getHosts = async function(){
         if (await this.isAuthenticated())
         {
+            await routerApi.hostPacketCounters();
             result = {
                 success: true,
                 blackListEnabled: false,
@@ -102,6 +103,21 @@ function globalState() {
 
             //result.hosts.sort((a, b) => (a.hostName > b.hostName) ? 1 : -1)
             return result;
+        }
+    }
+
+    this.hostPacketCounters = async function(){
+        if (await this.isAuthenticated())
+        {
+            const counters = await routerApi.hostPacketCounters();
+
+            const mappedData = counters.map(item => ({
+                mac: item.associatedDeviceMACAddress,
+                sentDataCount: item.X_TP_TotalPacketsSent,
+                receivedDataCount: item.X_TP_TotalPacketsReceived
+            }));
+
+            return {success: true, devices: mappedData};
         }
     }
 
@@ -182,6 +198,14 @@ function globalState() {
 
             return await routerApi.staticHostRemove(id);
         }
+
+        this.statichostPacketCountersHostAdd = async function(mac, ip){
+            if (await this.isAuthenticated())
+            {
+                return await routerApi.hostPacketCounters(mac, ip);
+            }
+        }
+        hostPacketCounters
     }
 }
 
