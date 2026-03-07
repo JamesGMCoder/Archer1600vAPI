@@ -10,7 +10,7 @@ function globalState() {
     password = process.env.ROUTER_PASSWORD;
 
     const apiData = {
-    apiBaseUrl: process.env.ROUTER_API_BASE_URL,
+    apiBaseUrl: process.env.ROUTER_URI,
     cookieId: "",
     tokenId: ""
 };

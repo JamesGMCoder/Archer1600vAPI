@@ -79,6 +79,12 @@ Each endpoint returns a JSON object with an `error` field if an error occurs. Th
 # Development
 ## Running
 
+Create .env File at the root of the project
+
+ROUTER_USERNAME=admin
+ROUTER_PASSWORD=xxxxxx
+ROUTER_URI=http://192.168.1.1
+
 To run the code
 ```
 npm run dev   

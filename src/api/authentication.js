@@ -1,9 +1,10 @@
 const axios = require('axios');
 const rsaEncrypt = require('../../tools/encrypt');
+require('dotenv').config();
 
 module.exports = authentication;
 
-var _RouterURI = "";
+var _RouterURI = process.env.ROUTER_URI || "";
 
 async function getModulusExponent(){
   var url = `${_RouterURI}/cgi/getParm`;
@@ -44,7 +45,7 @@ async function getModulusExponent(){
 }
 
 function authentication(url){
-    _RouterURI = url;
+  if (url) _RouterURI = url;
     tokenId = "";
     cookieId = "";
  
